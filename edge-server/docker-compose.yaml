@@ -1,0 +1,33 @@
+version: "3.8" # bump to bare minimum version
+
+volumes:
+  pypidata:
+    driver: local
+
+services:
+  api:
+    container_name: api_server_container
+    build:
+      context: $PWD/api
+      dockerfile: Dockerfile
+    image: ${API_IMAGE}
+    ports:
+      - "${EXPOSED_PORT:-8000}:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      name: api
+      id: api
+    environment:
+      - HOST_DATASET_DIR=${USER_PATH}/dataset
+      - TRAINING_IMAGE=${TRAINING_IMAGE}
+      - ENABLE_GPU=${ENABLE_GPU:-true}
+      - UBUNTU_VER=${UBUNTU_VER:-20.04}
+    volumes:
+      - /mnt/wsl/docker-desktop/shared-sockets/guest-services/docker.sock:/var/run/docker.sock
+      # - ${USER_PATH}/dataset:/dataset_dir
+    healthcheck:
+      test: curl http://localhost/gpu >/dev/null || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 5

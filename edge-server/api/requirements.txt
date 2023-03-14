@@ -1,0 +1,16 @@
+fastapi
+pydantic
+uvicorn
+docker
+gunicorn
+pydicom
+opencv-python
+matplotlib
+python-multipart
+psutil
+py-cpuinfo
+GPUtil
+numpy
+pyyaml
+pytest
+aiohttp
